@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TechCirculo - Connect & Learn Together</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar-container">
+        <div class="navbar-brand">
+          <a href="/" class="logo">TechCirculo</a>
+        </div>
+        <div class="navbar-menu">
+          <a href="/" class="nav-link">Home</a>
+          <a href="/communities.html" class="nav-link">Communities</a>
+        </div>
+        <div class="navbar-auth">
+          <a href="/login.html" class="nav-link">Log in</a>
+          <a href="/register.html" class="button">Sign up</a>
+        </div>
+        <button class="mobile-menu-button" aria-label="Menu">
+          <svg class="menu-icon" viewBox="0 0 24 24" width="24" height="24">
+            <path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+          </svg>
+        </button>
+      </div>
+    </nav>
+
+    <main class="container">
+      <section class="hero">
+        <h1>Welcome to TechCirculo</h1>
+        <p>Connect with students, teachers, and alumni who share your tech interests</p>
+        <div class="cta-buttons">
+          <a href="/register.html" class="button button-primary">Join Now</a>
+          <a href="/communities.html" class="button button-secondary">Browse Communities</a>
+        </div>
+      </section>
+
+      <section class="features">
+        <h2>Why Join TechCirculo?</h2>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <h3>Connect</h3>
+            <p>Network with peers and professionals in your field of interest</p>
+          </div>
+          <div class="feature-card">
+            <h3>Learn</h3>
+            <p>Access resources and participate in discussions</p>
+          </div>
+          <div class="feature-card">
+            <h3>Grow</h3>
+            <p>Develop your skills through community collaboration</p>
+          </div>
+          <div class="feature-card">
+            <h3>Share</h3>
+            <p>Contribute your knowledge and experiences</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="myCommunities" class="communities-section" style="display: none;">
+        <h2>My Communities</h2>
+        <div class="community-grid">
+          <!-- My communities will be loaded dynamically -->
+        </div>
+      </section>
+
+      <section class="communities-section">
+        <h2>All Communities</h2>
+        <div class="community-grid" id="allCommunities">
+          <!-- Communities will be loaded dynamically -->
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p>&copy; 2024 TechCirculo. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script src="/js/main.js"></script>
+  </body>
+</html>
