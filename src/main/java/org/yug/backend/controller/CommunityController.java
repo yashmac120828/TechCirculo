@@ -1,13 +1,14 @@
 package org.yug.backend.controller;
 
-import com.techcirculo.dto.CommunityRequest;
-import com.techcirculo.dto.CommunityResponse;
-import com.techcirculo.service.CommunityService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.yug.backend.dto.CommunityRequest;
+import org.yug.backend.dto.CommunityResponse;
+import org.yug.backend.service.CommunityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import com.techcirculo.security.UserPrincipal;
+import org.yug.backend.security.UserPrincipal;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +17,7 @@ import java.util.UUID;
 @RequestMapping("/communities")
 @RequiredArgsConstructor
 public class CommunityController {
-
+@Autowired
     private final CommunityService communityService;
 
     @GetMapping
