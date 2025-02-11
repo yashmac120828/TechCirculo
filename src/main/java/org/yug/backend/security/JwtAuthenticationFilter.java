@@ -10,6 +10,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.yug.backend.model.User;
+import org.yug.backend.repository.UserRepository;
+import org.yug.backend.security.JwtTokenProvider;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -18,9 +21,11 @@ import java.util.UUID;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final UserRepository userRepository;
 
-    public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
+    public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider, UserRepository userRepository) {
         this.jwtTokenProvider = jwtTokenProvider;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -29,17 +34,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = extractToken(request);
 
         if (token != null && jwtTokenProvider.validateToken(token)) {
-            String userId = jwtTokenProvider.getUserIdFromToken(token);
+            String userId = jwtTokenProvider.getUserIdFromToken(token); // Fetch the user from the database
+            User user = userRepository.findById(UUID.fromString(userId))
+                    .orElseThrow(() -> new RuntimeException("User not found!"));
 
-            UserDetails userDetails = new UserPrincipal(
-                    UUID.fromString(userId),
-                    "dummy@example.com", // Replace with actual user details
-                    "dummyPassword", // Replace with actual user details
-                    "ROLE_USER" // Replace with actual user role
-            );
+            // Create UserPrincipal using the fetched user
+            UserPrincipal userPrincipal = UserPrincipal.create(user);
 
+            // Set the authentication in the SecurityContext
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.getAuthorities()
+                    userPrincipal, null, userPrincipal.getAuthorities()
             );
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
