@@ -6,9 +6,9 @@ import org.yug.backend.dto.CommunityResponse;
 import org.yug.backend.service.CommunityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+//import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.yug.backend.security.UserPrincipal;
+//import org.yug.backend.security.UserPrincipal;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,40 +17,41 @@ import java.util.UUID;
 @RequestMapping("/communities")
 @RequiredArgsConstructor
 public class CommunityController {
-@Autowired
+    @Autowired
     private final CommunityService communityService;
 
     @GetMapping
     public ResponseEntity<List<CommunityResponse>> getAllCommunities() {
         return ResponseEntity.ok(communityService.getAllCommunities());
     }
-
-    @GetMapping("/my")
-    public ResponseEntity<List<CommunityResponse>> getMyCommunities(
-            @AuthenticationPrincipal UserPrincipal currentUser) {
-        return ResponseEntity.ok(communityService.getMyCommunities(currentUser.getId()));
-    }
-
-    @PostMapping
-    public ResponseEntity<CommunityResponse> createCommunity(
-            @RequestBody CommunityRequest request,
-            @AuthenticationPrincipal UserPrincipal currentUser) {
-        return ResponseEntity.ok(communityService.createCommunity(request, currentUser.getId()));
-    }
-
-    @PostMapping("/{communityId}/join")
-    public ResponseEntity<Void> joinCommunity(
-            @PathVariable UUID communityId,
-            @AuthenticationPrincipal UserPrincipal currentUser) {
-        communityService.joinCommunity(communityId, currentUser.getId());
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/{communityId}/leave")
-    public ResponseEntity<Void> leaveCommunity(
-            @PathVariable UUID communityId,
-            @AuthenticationPrincipal UserPrincipal currentUser) {
-        communityService.leaveCommunity(communityId, currentUser.getId());
-        return ResponseEntity.ok().build();
-    }
+//
+////
+////    @GetMapping("/my")
+////    public ResponseEntity<List<CommunityResponse>> getMyCommunities(
+////            @AuthenticationPrincipal UserPrincipal currentUser) {
+////        return ResponseEntity.ok(communityService.getMyCommunities(currentUser.getId()));
+////    }
+//
+//    @PostMapping
+//    public ResponseEntity<CommunityResponse> createCommunity(
+//            @RequestBody CommunityRequest request,
+//            @AuthenticationPrincipal UserPrincipal currentUser) {
+//        return ResponseEntity.ok(communityService.createCommunity(request, currentUser.getId()));
+//    }
+//
+//    @PostMapping("/{communityId}/join")
+//    public ResponseEntity<Void> joinCommunity(
+//            @PathVariable UUID communityId,
+//            @AuthenticationPrincipal UserPrincipal currentUser) {
+//        communityService.joinCommunity(communityId, currentUser.getId());
+//        return ResponseEntity.ok().build();
+//    }
+//
+//    @PostMapping("/{communityId}/leave")
+//    public ResponseEntity<Void> leaveCommunity(
+//            @PathVariable UUID communityId,
+//            @AuthenticationPrincipal UserPrincipal currentUser) {
+//        communityService.leaveCommunity(communityId, currentUser.getId());
+//        return ResponseEntity.ok().build();
+//    }
 }
