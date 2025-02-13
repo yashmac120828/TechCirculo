@@ -4,13 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.yug.backend.dto.CommunityRequest;
 import org.yug.backend.dto.CommunityResponse;
-import org.yug.backend.security.UserPrincipal;
+import org.yug.backend.model.UserPrincipal;
 import org.yug.backend.service.CommunityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-//import org.yug.backend.security.UserPrincipal;
+
 
 import java.util.List;
 import java.util.UUID;

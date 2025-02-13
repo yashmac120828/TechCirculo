@@ -85,7 +85,7 @@ public class CommunityService {
                 community.getId(),
                 community.getName(),
                 community.getDescription(),
-                community.getCreatedBy().getFullName(),
+                community.getCreatedBy().getUsername(),
                 community.getMemberCount(),
                 community.getCreatedAt()
         );

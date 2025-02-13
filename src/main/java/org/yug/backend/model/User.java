@@ -29,8 +29,8 @@ public class User {
     @Column(nullable = false)
     private UserRole role = UserRole.STUDENT;
 
-    @Column(name = "full_name", nullable = false)
-    private String fullName;
+    @Column(name = "username", nullable = false)
+    private String username;
 
     @ManyToMany
     @JoinTable(
