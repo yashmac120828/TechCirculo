@@ -4,6 +4,7 @@ package org.yug.backend.service;
 
 import jakarta.transaction.Transactional;
 import org.apache.catalina.connector.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.yug.backend.dto.CommunityRequest;
 import org.yug.backend.dto.CommunityResponse;
 import org.yug.backend.model.Community;
@@ -20,12 +21,13 @@ import java.util.stream.Collectors;
 
 
 @Service
-@RequiredArgsConstructor
+
 
 public class CommunityService {
-
-    private final CommunityRepository communityRepository;
-    private final UserRepository userRepository;
+@Autowired
+     CommunityRepository communityRepository;
+@Autowired
+     UserRepository userRepository;
 
     public List<CommunityResponse> getAllCommunities() {
         return communityRepository.findAll().stream()
@@ -51,7 +53,7 @@ public class CommunityService {
         community.setName(request.getName());
         community.setDescription(request.getDescription());
         community.setCreatedBy(user);
-        community.setCreatedAt(LocalDateTime.now());
+
         community.setMemberCount(0);
 
         communityRepository.save(community);
@@ -85,9 +87,9 @@ public class CommunityService {
                 community.getId(),
                 community.getName(),
                 community.getDescription(),
-                community.getCreatedBy().getFullName(),
-                community.getMemberCount(),
-                community.getCreatedAt()
+                community.getCreatedBy().getUsername(),
+                community.getMemberCount()
+
         );
     }
 }

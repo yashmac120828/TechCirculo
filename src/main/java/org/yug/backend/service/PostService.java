@@ -11,22 +11,21 @@ import org.yug.backend.repository.CommunityRepository;
 import org.yug.backend.repository.PostRepository;
 import org.yug.backend.repository.UserRepository;
 import  org.yug.backend.dto.PostResponse;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
+
 public class PostService {
 
 @Autowired
-    private final PostRepository postRepository;
+    PostRepository postRepository;
 @Autowired
-    private final UserRepository userRepository;
+     UserRepository userRepository;
 @Autowired
-    private final CommunityRepository communityRepository;
+    CommunityRepository communityRepository;
 
     public List<PostResponse> getCommunityPosts(UUID communityId) {
         Community community = communityRepository.findById(communityId)
@@ -75,7 +74,7 @@ public class PostService {
                 post.getId(),
                 post.getTitle(),
                 post.getContent(),
-                post.getAuthor().getFullName(),
+                post.getAuthor().getUsername(),
                 post.getCommunity().getName(),
                 post.getCreatedAt(),
                 post.getUpvotes(),

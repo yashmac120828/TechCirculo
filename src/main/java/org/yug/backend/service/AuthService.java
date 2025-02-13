@@ -2,37 +2,36 @@ package org.yug.backend.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.yug.backend.dto.AuthResponse;
 import org.yug.backend.dto.LoginRequest;
 import org.yug.backend.dto.RegisterRequest;
 import org.yug.backend.model.User;
 import org.yug.backend.model.UserRole;
 import org.yug.backend.repository.UserRepository;
-import org.yug.backend.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Service
-@RequiredArgsConstructor
+
 public class AuthService {
+
 
     private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
-    private final JwtTokenProvider jwtTokenProvider;
+    @Autowired UserRepository userRepository;
+    @Autowired PasswordEncoder passwordEncoder;
+    @Autowired AuthenticationManager authenticationManager;
+    @Autowired JwtService jwtService;
+
 
     public AuthResponse register(RegisterRequest request) {
         logger.info("Registering user with email: {}", request.getEmail());
@@ -46,12 +45,12 @@ public class AuthService {
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(UserRole.STUDENT); // Default role
-        user.setFullName(request.getFullName());
+        user.setUsername(request.getUsername());
         user.setCreatedAt(LocalDateTime.now());
 
         userRepository.save(user);
 
-      String token = jwtTokenProvider.generateToken(user.getId().toString(), user.getRole().name());
+      String token = jwtService.generateToken(user.getUsername());
        return new AuthResponse(token);
 
     }
@@ -67,7 +66,7 @@ if(authentication.isAuthenticated()) {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found!"));
     logger.info("Befor token");
-        String token = jwtTokenProvider.generateToken(user.getId().toString(), user.getRole().name());
+        String token =jwtService.generateToken(user.getUsername());
     logger.info("After token");
 
         return new AuthResponse(token);

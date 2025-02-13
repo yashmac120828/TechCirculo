@@ -1,35 +1,41 @@
-package org.yug.backend.security;
+package org.yug.backend.model;
 
-import org.yug.backend.model.User;
-import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.UUID;
 
-@Data
 public class UserPrincipal implements UserDetails {
-    private UUID id;
-    private String email;
-    private String password;
-    private String role;
 
-    public UserPrincipal(UUID id, String email, String password, String role) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.role = role;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
+
+    private User user;
+
+
+    public UserPrincipal(User user) {
+      this.user = user;
+
     }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null; // You can implement roles/authorities here if needed
     }
 
     @Override
+    public String getPassword() {
+        return user.getPassword();
+    }
+
+    @Override
     public String getUsername() {
-        return email;
+        return user.getUsername();
     }
 
     @Override
@@ -52,7 +58,8 @@ public class UserPrincipal implements UserDetails {
         return true;
     }
 
-    public static UserPrincipal create(User user) {
-        return new UserPrincipal(user.getId(), user.getEmail(), user.getPassword(), user.getRole().name());
+
+    public UUID getId() {
+        return user.getId();
     }
 }

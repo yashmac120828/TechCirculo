@@ -3,7 +3,7 @@ package org.yug.backend.controller;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.yug.backend.dto.PostRequest;
 import org.yug.backend.dto.PostResponse;
-import org.yug.backend.security.UserPrincipal;
+import org.yug.backend.model.UserPrincipal;
 import org.yug.backend.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
