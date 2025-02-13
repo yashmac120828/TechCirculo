@@ -25,7 +25,7 @@ public class SecurityConfig {
 UserDetailsService userDetailsService;
 
     @Autowired
-   JwtFilter jwtFilter;
+   private JwtFilter jwtFilter;
 
     @Bean
     public AuthenticationProvider authProvider() {
@@ -41,7 +41,7 @@ UserDetailsService userDetailsService;
 
         http.csrf(customizer -> customizer.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll() // Allow public access to auth endpoints
+                        .requestMatchers("/auth/**","/communities").permitAll() // Allow public access to auth endpoints
                         .requestMatchers("/admin/**").hasRole("ADMIN") // Admin-only endpoints
                         .anyRequest().authenticated() // Secure all other endpoints
                 )

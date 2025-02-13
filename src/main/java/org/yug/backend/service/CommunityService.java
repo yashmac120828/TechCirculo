@@ -53,7 +53,7 @@ public class CommunityService {
         community.setName(request.getName());
         community.setDescription(request.getDescription());
         community.setCreatedBy(user);
-        community.setCreatedAt(LocalDateTime.now());
+
         community.setMemberCount(0);
 
         communityRepository.save(community);
@@ -88,8 +88,8 @@ public class CommunityService {
                 community.getName(),
                 community.getDescription(),
                 community.getCreatedBy().getUsername(),
-                community.getMemberCount(),
-                community.getCreatedAt()
+                community.getMemberCount()
+
         );
     }
 }

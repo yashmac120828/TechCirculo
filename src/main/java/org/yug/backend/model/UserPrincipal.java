@@ -17,17 +17,10 @@ public class UserPrincipal implements UserDetails {
 
 
     private User user;
-    private UUID id;
-    private String email;
-    private String password;
-    private String role;
+
 
     public UserPrincipal(User user) {
-        this.user=user;
-        this.id = user.getId();
-        this.email = user.getEmail();
-        this.password = user.getPassword();
-        this.role = user.getRole().name();
+      this.user = user;
 
     }
     @Override
@@ -42,7 +35,7 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return user.getUsername();
     }
 
     @Override
@@ -65,9 +58,6 @@ public class UserPrincipal implements UserDetails {
         return true;
     }
 
-    public static UserPrincipal create(User user) {
-        return new UserPrincipal(user);
-    }
 
     public UUID getId() {
         return user.getId();

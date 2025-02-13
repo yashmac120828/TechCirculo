@@ -5,8 +5,11 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.yug.backend.config.JwtFilter;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -20,7 +23,7 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
-
+    private static final Logger logger = LoggerFactory.getLogger(JwtService.class);
     private static final String SECRET = "TmV3U2VjcmV0S2V5Rm9ySldUU2lnbmluZ1B1cnBvc2VzMTIzNDU2Nzg=\r\n";
 
     private String secretKey;
@@ -60,6 +63,7 @@ public class JwtService {
 
     public String extractUserName(String token) {
         // extract the username from jwt token
+        logger.info("inside extractUserName");
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -69,6 +73,7 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
+        logger.info("inside extractAllClaims");
         return Jwts.parserBuilder()
                 .setSigningKey(getKey())
                 .build().parseClaimsJws(token).getBody();
@@ -76,7 +81,10 @@ public class JwtService {
 
 
     public boolean validateToken(String token, UserDetails userDetails) {
+
         final String userName = extractUserName(token);
+        logger.info("Username: "+userName);
+        logger.info("UserDetails: "+userDetails.getUsername());
         return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
@@ -88,7 +96,6 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    public String extractUsername(String token) {
-        return extractUsername(token);
-    }
+
+
 }

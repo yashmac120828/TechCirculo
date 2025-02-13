@@ -29,16 +29,12 @@ public class Community {
     @JoinColumn(name = "created_by", nullable = false)
     private User createdBy;
 
-    @ElementCollection
-    @CollectionTable(name = "community_topics")
-    private Set<String> topics = new HashSet<>();
+
 
     @Column(name = "member_count")
     private int memberCount = 0;
 
-    @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+
 
     @ManyToMany
     @JoinTable(
@@ -46,5 +42,5 @@ public class Community {
         joinColumns = @JoinColumn(name = "community_id"),
         inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private Set<User> members = new HashSet<>();
+   private Set<User> members = new HashSet<>();
 }
