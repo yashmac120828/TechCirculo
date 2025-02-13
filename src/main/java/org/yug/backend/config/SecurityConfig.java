@@ -22,10 +22,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     @Autowired
-    private UserDetailsService userDetailsService;
+UserDetailsService userDetailsService;
 
     @Autowired
-    private JwtFilter jwtFilter;
+   JwtFilter jwtFilter;
 
     @Bean
     public AuthenticationProvider authProvider() {

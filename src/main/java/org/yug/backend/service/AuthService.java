@@ -2,6 +2,7 @@ package org.yug.backend.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.yug.backend.dto.AuthResponse;
 import org.yug.backend.dto.LoginRequest;
 import org.yug.backend.dto.RegisterRequest;
@@ -20,15 +21,16 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
+
 public class AuthService {
+
 
     private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
-    private final JwtService jwtService;
+    @Autowired UserRepository userRepository;
+    @Autowired PasswordEncoder passwordEncoder;
+    @Autowired AuthenticationManager authenticationManager;
+    @Autowired JwtService jwtService;
 
 
     public AuthResponse register(RegisterRequest request) {

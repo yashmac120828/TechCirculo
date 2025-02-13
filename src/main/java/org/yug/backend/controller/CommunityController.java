@@ -17,10 +17,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/communities")
-@RequiredArgsConstructor
+
 public class CommunityController {
     @Autowired
-    private final CommunityService communityService;
+     CommunityService communityService;
 
     @GetMapping
     public ResponseEntity<List<CommunityResponse>> getAllCommunities() {

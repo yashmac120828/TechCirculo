@@ -4,6 +4,7 @@ package org.yug.backend.service;
 
 import jakarta.transaction.Transactional;
 import org.apache.catalina.connector.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.yug.backend.dto.CommunityRequest;
 import org.yug.backend.dto.CommunityResponse;
 import org.yug.backend.model.Community;
@@ -20,12 +21,13 @@ import java.util.stream.Collectors;
 
 
 @Service
-@RequiredArgsConstructor
+
 
 public class CommunityService {
-
-    private final CommunityRepository communityRepository;
-    private final UserRepository userRepository;
+@Autowired
+     CommunityRepository communityRepository;
+@Autowired
+     UserRepository userRepository;
 
     public List<CommunityResponse> getAllCommunities() {
         return communityRepository.findAll().stream()
