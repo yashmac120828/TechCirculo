@@ -1,5 +1,7 @@
 package org.yug.backend.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.yug.backend.repository.UserRepository;
 import org.yug.backend.security.JwtAuthenticationFilter;
 import org.yug.backend.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +19,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
-public class SecurityConfig {
 
-    private final JwtTokenProvider jwtTokenProvider;
+public class SecurityConfig {
+@Autowired
+ JwtTokenProvider jwtTokenProvider;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   UserRepository userRepository) throws Exception {
         http
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless JWT
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless session
@@ -32,7 +35,7 @@ public class SecurityConfig {
                         .requestMatchers("/admin/**").hasRole("ADMIN") // Admin-only endpoints
                         .anyRequest().authenticated() // Secure all other endpoints
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class); // Add JWT filter
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider,userRepository), UsernamePasswordAuthenticationFilter.class); // Add JWT filter
 
         return http.build();
     }

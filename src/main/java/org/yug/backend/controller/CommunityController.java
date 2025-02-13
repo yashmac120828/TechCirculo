@@ -1,8 +1,10 @@
 package org.yug.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.yug.backend.dto.CommunityRequest;
 import org.yug.backend.dto.CommunityResponse;
+import org.yug.backend.security.UserPrincipal;
 import org.yug.backend.service.CommunityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,34 +26,34 @@ public class CommunityController {
     public ResponseEntity<List<CommunityResponse>> getAllCommunities() {
         return ResponseEntity.ok(communityService.getAllCommunities());
     }
-//
-////
-////    @GetMapping("/my")
-////    public ResponseEntity<List<CommunityResponse>> getMyCommunities(
-////            @AuthenticationPrincipal UserPrincipal currentUser) {
-////        return ResponseEntity.ok(communityService.getMyCommunities(currentUser.getId()));
-////    }
-//
-//    @PostMapping
-//    public ResponseEntity<CommunityResponse> createCommunity(
-//            @RequestBody CommunityRequest request,
-//            @AuthenticationPrincipal UserPrincipal currentUser) {
-//        return ResponseEntity.ok(communityService.createCommunity(request, currentUser.getId()));
-//    }
-//
-//    @PostMapping("/{communityId}/join")
-//    public ResponseEntity<Void> joinCommunity(
-//            @PathVariable UUID communityId,
-//            @AuthenticationPrincipal UserPrincipal currentUser) {
-//        communityService.joinCommunity(communityId, currentUser.getId());
-//        return ResponseEntity.ok().build();
-//    }
-//
-//    @PostMapping("/{communityId}/leave")
-//    public ResponseEntity<Void> leaveCommunity(
-//            @PathVariable UUID communityId,
-//            @AuthenticationPrincipal UserPrincipal currentUser) {
-//        communityService.leaveCommunity(communityId, currentUser.getId());
-//        return ResponseEntity.ok().build();
-//    }
+
+
+    @GetMapping("/my")
+    public ResponseEntity<List<CommunityResponse>> getMyCommunities(
+            @AuthenticationPrincipal UserPrincipal currentUser) {
+        return ResponseEntity.ok(communityService.getMyCommunities(currentUser.getId()));
+    }
+
+    @PostMapping
+    public ResponseEntity<CommunityResponse> createCommunity(
+            @RequestBody CommunityRequest request,
+            @AuthenticationPrincipal UserPrincipal currentUser) {
+        return ResponseEntity.ok(communityService.createCommunity(request, currentUser.getId()));
+    }
+
+    @PostMapping("/{communityId}/join")
+    public ResponseEntity<Void> joinCommunity(
+            @PathVariable UUID communityId,
+            @AuthenticationPrincipal UserPrincipal currentUser) {
+        communityService.joinCommunity(communityId, currentUser.getId());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{communityId}/leave")
+    public ResponseEntity<Void> leaveCommunity(
+            @PathVariable UUID communityId,
+            @AuthenticationPrincipal UserPrincipal currentUser) {
+        communityService.leaveCommunity(communityId, currentUser.getId());
+        return ResponseEntity.ok().build();
+    }
 }

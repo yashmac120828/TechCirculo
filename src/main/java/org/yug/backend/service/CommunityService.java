@@ -2,6 +2,7 @@ package org.yug.backend.service;
 
 
 
+import jakarta.transaction.Transactional;
 import org.apache.catalina.connector.Response;
 import org.yug.backend.dto.CommunityRequest;
 import org.yug.backend.dto.CommunityResponse;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+
 public class CommunityService {
 
     private final CommunityRepository communityRepository;
@@ -29,6 +31,7 @@ public class CommunityService {
         return communityRepository.findAll().stream()
                 .map(this::mapToCommunityResponse)
                 .collect(Collectors.toList());
+
     }
 
     public List<CommunityResponse> getMyCommunities(UUID userId) {
