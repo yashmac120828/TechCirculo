@@ -1,6 +1,8 @@
 package org.yug.backend.service;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.yug.backend.dto.PostRequest;
@@ -19,7 +21,7 @@ import java.util.stream.Collectors;
 @Service
 
 public class PostService {
-
+    private static final Logger logger = LoggerFactory.getLogger(PostService.class);
 @Autowired
     PostRepository postRepository;
 @Autowired
@@ -40,10 +42,11 @@ public class PostService {
                 .orElseThrow(() -> new RuntimeException("User not found!"));
         Community community = communityRepository.findById(request.getCommunityId())
                 .orElseThrow(() -> new RuntimeException("Community not found!"));
-
+logger.info("Creating post for community: " + community.getName());
         Post post = new Post();
-        post.setId(UUID.randomUUID());
+      //  post.setId(UUID.randomUUID());
         post.setTitle(request.getTitle());
+            logger.info("Creating post with title: " + request.getTitle());
         post.setContent(request.getContent());
         post.setAuthor(user);
         post.setCommunity(community);

@@ -23,10 +23,14 @@ public class UserPrincipal implements UserDetails {
       this.user = user;
 
     }
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null; // You can implement roles/authorities here if needed
-    }
+//    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//        return null; // You can implement roles/authorities here if needed
+//    }
+@Override
+public Collection<? extends GrantedAuthority> getAuthorities() {
+    return Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name()));
+}
 
     @Override
     public String getPassword() {
