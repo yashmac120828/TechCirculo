@@ -38,8 +38,10 @@ public class PostService {
     }
 
     public PostResponse createPost(PostRequest request, UUID userId) {
+        logger.info("inside creatpost " + userId);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found!"));
+        logger.info("Creating post for user: " + request.getCommunityId());
         Community community = communityRepository.findById(request.getCommunityId())
                 .orElseThrow(() -> new RuntimeException("Community not found!"));
 logger.info("Creating post for community: " + community.getName());
