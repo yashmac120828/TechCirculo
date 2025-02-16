@@ -56,4 +56,11 @@ public class CommunityController {
         communityService.leaveCommunity(communityId, currentUser.getId());
         return ResponseEntity.ok().build();
     }
+    @PostMapping("/{communityId}/delete")
+    public ResponseEntity<Void> deleteCommunity(
+            @PathVariable UUID communityId,
+            @AuthenticationPrincipal UserPrincipal currentUser) {
+        communityService.deleteCommunity(communityId);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -46,7 +46,7 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(UserRole.STUDENT); // Default role
         user.setUsername(request.getUsername());
-        user.setCreatedAt(LocalDateTime.now());
+
 
         userRepository.save(user);
 
@@ -60,7 +60,7 @@ public class AuthService {
 Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         logger.info("After Auth: {}");
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
+
 if(authentication.isAuthenticated()) {
     logger.info("In auth if");
         User user = userRepository.findByEmail(request.getEmail())

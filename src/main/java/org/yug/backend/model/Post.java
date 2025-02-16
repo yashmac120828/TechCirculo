@@ -23,10 +23,12 @@ public class Post {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
+    // Many-to-One relationship with User (no extra table)
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
+    // Many-to-One relationship with Community (no extra table)
     @ManyToOne
     @JoinColumn(name = "community_id", nullable = false)
     private Community community;
