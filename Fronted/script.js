@@ -10,6 +10,49 @@ const userData = {
   },
 };
 
+document.addEventListener("DOMContentLoaded", function () {
+  const slider = document.querySelector(".slider");
+
+  // Clone the first few items for a seamless loop
+  const clone = slider.innerHTML;
+  slider.innerHTML += clone;
+
+  slider.style.animation = "scroll 10s linear infinite";
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  const slider = document.querySelector(".slider");
+
+  slider.addEventListener("mouseenter", () => {
+    slider.style.animationPlayState = "paused";
+  });
+
+  slider.addEventListener("mouseleave", () => {
+    slider.style.animationPlayState = "running";
+  });
+});
+function likePost(btn) {
+  if (btn.innerText.includes("Liked")) {
+      btn.innerText = "Like ❤️";
+  } else {
+      btn.innerText = "Liked ✅";
+  }
+}
+function sharePost() {
+  alert("Post shared successfully!");
+}
+function toggleJoin(btn) {
+  if (btn.innerText.includes("Join")) {
+      btn.innerText = "Leave Community";
+      btn.classList.add("joined");
+      
+  } else {
+      btn.innerText = "Join Community";
+      btn.classList.remove("joined");
+  }
+}
+
+
 const communities = [
   {
     id: 1,
