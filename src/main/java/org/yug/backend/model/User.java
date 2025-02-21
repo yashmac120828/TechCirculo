@@ -17,6 +17,7 @@ import java.util.UUID;
 @EntityListeners(AuditingEntityListener.class)
 public class User {
     @Id
+    @GeneratedValue
     private UUID id;
 
     @Column(unique = true, nullable = false)
@@ -29,20 +30,11 @@ public class User {
     @Column(nullable = false)
     private UserRole role = UserRole.STUDENT;
 
-    @Column(name = "full_name", nullable = false)
-    private String fullName;
+    @Column(name = "username", nullable = false)
+    private String username;
 
-    @ManyToMany
-    @JoinTable(
-        name = "user_interests",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "interest_id")
-    )
-    private Set<Interest> interests = new HashSet<>();
 
-    @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+
 
     @LastModifiedDate
     @Column(name = "updated_at")

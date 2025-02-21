@@ -1,6 +1,8 @@
 package org.yug.backend.service;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.yug.backend.dto.PostRequest;
@@ -11,22 +13,21 @@ import org.yug.backend.repository.CommunityRepository;
 import org.yug.backend.repository.PostRepository;
 import org.yug.backend.repository.UserRepository;
 import  org.yug.backend.dto.PostResponse;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
-public class PostService {
 
+public class PostService {
+    private static final Logger logger = LoggerFactory.getLogger(PostService.class);
 @Autowired
-    private final PostRepository postRepository;
+    PostRepository postRepository;
 @Autowired
-    private final UserRepository userRepository;
+     UserRepository userRepository;
 @Autowired
-    private final CommunityRepository communityRepository;
+    CommunityRepository communityRepository;
 
     public List<PostResponse> getCommunityPosts(UUID communityId) {
         Community community = communityRepository.findById(communityId)
@@ -37,14 +38,17 @@ public class PostService {
     }
 
     public PostResponse createPost(PostRequest request, UUID userId) {
+        logger.info("inside creatpost " + userId);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found!"));
+        logger.info("Creating post for user: " + request.getCommunityId());
         Community community = communityRepository.findById(request.getCommunityId())
                 .orElseThrow(() -> new RuntimeException("Community not found!"));
-
+logger.info("Creating post for community: " + community.getName());
         Post post = new Post();
-        post.setId(UUID.randomUUID());
+      //  post.setId(UUID.randomUUID());
         post.setTitle(request.getTitle());
+            logger.info("Creating post with title: " + request.getTitle());
         post.setContent(request.getContent());
         post.setAuthor(user);
         post.setCommunity(community);
@@ -75,7 +79,7 @@ public class PostService {
                 post.getId(),
                 post.getTitle(),
                 post.getContent(),
-                post.getAuthor().getFullName(),
+                post.getAuthor().getUsername(),
                 post.getCommunity().getName(),
                 post.getCreatedAt(),
                 post.getUpvotes(),

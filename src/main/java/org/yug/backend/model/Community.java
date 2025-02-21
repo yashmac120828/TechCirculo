@@ -25,26 +25,12 @@ public class Community {
     @Column(nullable = false)
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "created_by", nullable = false)
-    private User createdBy;
-
-    @ElementCollection
-    @CollectionTable(name = "community_topics")
-    private Set<String> topics = new HashSet<>();
-
     @Column(name = "member_count")
     private int memberCount = 0;
 
-    @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @ManyToMany
-    @JoinTable(
-        name = "community_members",
-        joinColumns = @JoinColumn(name = "community_id"),
-        inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private Set<User> members = new HashSet<>();
+    // Corrected @ElementCollection mapping
+    @ElementCollection
+    @CollectionTable(name = "community_members", joinColumns = @JoinColumn(name = "community_id"))
+    @Column(name = "user_id")
+    private Set<UUID> members = new HashSet<>();
 }
