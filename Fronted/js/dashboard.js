@@ -21,7 +21,7 @@ async function fetchUserDetails() {
         const response = await fetch(`${API_BASE_URL}/user/me`, {
             headers: { "Authorization": `Bearer ${token}` }
         });
-        
+
         if (!response.ok) throw new Error("Failed to fetch user details");
         const user = await response.json();
         document.getElementById("user-name").textContent = `Hello, ${user.name}`;
@@ -37,10 +37,10 @@ async function searchCommunities(query) {
         const response = await fetch(`${API_BASE_URL}/communities/search?q=${query}`);
         if (!response.ok) throw new Error("Failed to search communities");
         const communities = await response.json();
-        
+
         const searchResults = document.getElementById("search-results");
         searchResults.innerHTML = ""; // Clear previous results
-        
+
         communities.forEach(comm => {
             const div = document.createElement("div");
             div.textContent = comm.name;
@@ -59,10 +59,10 @@ async function fetchAnnouncements() {
         const response = await fetch(`${API_BASE_URL}/announcements`);
         if (!response.ok) throw new Error("Failed to fetch announcements");
         const announcements = await response.json();
-        
+
         const announcementSection = document.getElementById("announcements");
         announcementSection.innerHTML = "";
-        
+
         announcements.forEach(ann => {
             const div = document.createElement("div");
             div.classList.add("announcement-item");
@@ -75,15 +75,15 @@ async function fetchAnnouncements() {
 }
 
 // Function to fetch and display posts
-async function fetchPosts() {
+async function fetchPosts(update = false) {
     try {
         const response = await fetch(`${API_BASE_URL}/posts`);
         if (!response.ok) throw new Error("Failed to fetch posts");
         const posts = await response.json();
-        
+
         const postsSection = document.getElementById("posts");
         postsSection.innerHTML = "";
-        
+
         posts.forEach(post => {
             const postDiv = document.createElement("div");
             postDiv.classList.add("post-item");
@@ -94,9 +94,19 @@ async function fetchPosts() {
             `;
             postsSection.appendChild(postDiv);
         });
+
+        // If updating, reset localStorage flag
+        if (update) {
+            localStorage.removeItem("updateDashboardPosts");
+        }
     } catch (error) {
         console.error("Error fetching posts:", error);
     }
+}
+
+// Function to notify that the dashboard needs an update
+function notifyDashboardToUpdate() {
+    localStorage.setItem("updateDashboardPosts", "true");
 }
 
 // Function to like a post
@@ -108,7 +118,8 @@ async function likePost(postId) {
             headers: { "Authorization": `Bearer ${token}` }
         });
         if (!response.ok) throw new Error("Failed to like post");
-        fetchPosts(); // Refresh posts after liking
+
+        fetchPosts(true); // Refresh posts after liking
     } catch (error) {
         console.error("Error liking post:", error);
     }
@@ -118,10 +129,56 @@ async function likePost(postId) {
 document.getElementById("search-bar").addEventListener("input", (event) => {
     searchCommunities(event.target.value);
 });
+document.addEventListener("DOMContentLoaded", async function () {
+    try {
+      // Fetch user details from backend
+      const response = await fetch("https://api.techcirculo.com/user/profile", {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("token")}`, // Assuming JWT authentication
+        },
+      });
+  
+      if (!response.ok) throw new Error("Failed to fetch user data");
+  
+      const userData = await response.json();
+  
+      // Update user profile details dynamically
+      document.getElementById("user-profile-pic").src = userData.profilePic || "default-avatar.png";
+      document.getElementById("user-name").textContent = userData.username || "User";
+  
+      // Fetch notifications count dynamically
+      const notificationsResponse = await fetch("https://api.techcirculo.com/notifications", {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+  
+      if (!notificationsResponse.ok) throw new Error("Failed to fetch notifications");
+  
+      const notificationsData = await notificationsResponse.json();
+      const notificationsCount = notificationsData.count || 0;
+  
+      // Update notifications badge dynamically
+      const badgeElement = document.querySelector(".badge");
+      badgeElement.textContent = notificationsCount;
+      badgeElement.style.display = notificationsCount > 0 ? "inline-block" : "none"; // Hide if no notifications
+  
+    } catch (error) {
+      console.error("Error loading user data:", error);
+    }
+  });
+  
 
-// Initialize the dashboard
+// Initialize the dashboard on page load
 window.onload = () => {
     fetchUserDetails();
     fetchAnnouncements();
-    fetchPosts();
+    
+    if (localStorage.getItem("updateDashboardPosts") === "true") {
+        fetchPosts(true);
+    } else {
+        fetchPosts();
+    }
 };

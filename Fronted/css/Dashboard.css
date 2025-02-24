@@ -65,7 +65,15 @@ body {
   transition: all 0.2s;
   position: relative;
 }
-
+.lo a{
+  text-decoration: none;
+  color:rgb(5, 60, 241);
+  font-weight: bolder;
+  height:200px;
+  width:200px;
+  border:none;
+  border-radius:5px;
+}
 .sidebar nav a:hover,
 .sidebar nav a.active {
   background-color: var(--primary-color);
@@ -145,11 +153,65 @@ body {
   gap: 0.75rem;
 }
 
-.user-profile img {
+.user-profile img{
   width: 40px;
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
+}
+.user-profile a{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+
+}
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+/* Search */
+.search {
+  display: flex;
+  align-items: center;
+  background: var(--background-color);
+  padding: 0.5rem;
+  border-radius: 5px;
+  width: 250px;
+}
+
+.search input {
+  border: none;
+  background: none;
+  outline: none;
+  width: 100%;
+  padding: 0.5rem;
+}
+
+/* User Menu */
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.user-profile img {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
 }
 
 /* Communities Section */

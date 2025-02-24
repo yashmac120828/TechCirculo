@@ -1,18 +1,22 @@
 document.addEventListener("DOMContentLoaded", async function () {
     const API_BASE_URL = "https://your-backend-api.com"; // Replace with actual backend URL
-    const userId = localStorage.getItem("userId"); // Assuming user ID is stored after login
-
+    const userId = localStorage.getItem("userId");
+    
     const communityList = document.getElementById("community-list");
     const joinedList = document.getElementById("joined-list");
     const postsSection = document.getElementById("posts-section");
     const announcementsSection = document.getElementById("announcements-section");
     const postsTab = document.getElementById("posts-tab");
     const announcementsTab = document.getElementById("announcements-tab");
+    const postContentInput = document.getElementById("post-content");
+    const addPostBtn = document.getElementById("add-post-btn");
+
+    let currentCommunityId = null; // Store the selected community ID
 
     // Default: Show Posts, Hide Announcements
     postsSection.classList.add("active");
-
-    // Fetch all communities from the backend
+    
+    // Fetch all communities
     async function fetchCommunities() {
         try {
             const response = await fetch(`${API_BASE_URL}/communities`);
@@ -51,7 +55,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             button.classList.add("join-btn");
             button.textContent = "Join";
             button.onclick = (e) => {
-                e.stopPropagation(); // Prevent parent li click event
+                e.stopPropagation();
                 joinCommunity(comm.id);
             };
 
@@ -69,7 +73,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             button.classList.add("remove-btn");
             button.textContent = "Remove";
             button.onclick = (e) => {
-                e.stopPropagation(); // Prevent parent li click event
+                e.stopPropagation();
                 removeCommunity(comm.id);
             };
 
@@ -118,6 +122,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     // Fetch and display posts & announcements for a community
     async function displayCommunityData(communityId) {
+        sessionStorage.setItem("selectedCommunityId", communityId);
+        currentCommunityId = communityId;
+
         try {
             const [postsResponse, announcementsResponse] = await Promise.all([
                 fetch(`${API_BASE_URL}/community/${communityId}/posts`),
@@ -149,6 +156,41 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     }
 
+    // Function to Add a Post
+    async function addPostToCommunity() {
+        const content = postContentInput.value.trim();
+        if (!content || !currentCommunityId) {
+            alert("Please enter a post and select a community.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/community/${currentCommunityId}/posts`, {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("jwt_token")}`
+                },
+                body: JSON.stringify({ userId, content })
+            });
+
+            if (response.ok) {
+                postContentInput.value = ""; // Clear input field
+                displayCommunityData(currentCommunityId); // Refresh posts
+                notifyDashboardToUpdate(); // Notify dashboard
+            } else {
+                console.error("Error adding post:", response.statusText);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+
+    // Notify the dashboard to update posts
+    function notifyDashboardToUpdate() {
+        localStorage.setItem("updateDashboardPosts", "true");
+    }
+
     // Tab Click Events
     postsTab.addEventListener("click", function () {
         postsSection.classList.add("active");
@@ -164,6 +206,114 @@ document.addEventListener("DOMContentLoaded", async function () {
         postsTab.classList.remove("active");
     });
 
+    // Attach event listener to Post button
+    addPostBtn.addEventListener("click", addPostToCommunity);
+
     // Initial Render
     renderCommunities();
+});
+async function fetchCommunities() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/communities`);
+        if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`);
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching communities:", error);
+        alert("Failed to load communities. Please try again.");
+        return [];
+    }
+}
+async function displayCommunityData(communityId) {
+    try {
+        const [postsResponse, announcementsResponse] = await Promise.all([
+            fetch(`${API_BASE_URL}/community/${communityId}/posts`),
+            fetch(`${API_BASE_URL}/community/${communityId}/announcements`)
+        ]);
+
+        const posts = await postsResponse.json();
+        const announcements = await announcementsResponse.json();
+
+        renderPosts(posts);
+        renderAnnouncements(announcements);
+    } catch (error) {
+        console.error("Error fetching community data:", error);
+    }
+}
+function showLoader() {
+    document.getElementById("loader").style.display = "block";
+}
+
+function hideLoader() {
+    document.getElementById("loader").style.display = "none";
+}
+
+// Example usage in API calls
+async function fetchJoinedCommunities() {
+    showLoader();
+    try {
+        const response = await fetch(`${API_BASE_URL}/user/${userId}/joined-communities`);
+        return response.ok ? await response.json() : [];
+    } catch (error) {
+        console.error("Error fetching joined communities:", error);
+        return [];
+    } finally {
+        hideLoader();
+    }
+}
+async function joinCommunity(communityId, button) {
+    button.disabled = true; // Disable button
+    try {
+        const response = await fetch(`${API_BASE_URL}/user/${userId}/join-community`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ communityId })
+        });
+
+        if (response.ok) {
+            await renderCommunities();
+        } else {
+            console.error("Error joining community:", response.statusText);
+        }
+    } catch (error) {
+        console.error("Error:", error);
+    } finally {
+        button.disabled = false; // Re-enable button
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const postsTab = document.getElementById("posts-tab");
+    const announcementsTab = document.getElementById("announcements-tab");
+    const postsSection = document.getElementById("posts-section");
+    const announcementsSection = document.getElementById("announcements-section");
+    const addPostSection = document.getElementById("add-post-section"); // Get the Add Post Section
+
+    // Function to switch tabs
+    function switchTab(tab) {
+        if (tab === "posts") {
+            postsSection.classList.add("active");
+            announcementsSection.classList.remove("active");
+            addPostSection.style.display = "block"; // Show Add Post section
+        } else if (tab === "announcements") {
+            postsSection.classList.remove("active");
+            announcementsSection.classList.add("active");
+            addPostSection.style.display = "none"; // Hide Add Post section
+        }
+    }
+
+    // Event Listeners for Tab Buttons
+    postsTab.addEventListener("click", function () {
+        switchTab("posts");
+        postsTab.classList.add("active");
+        announcementsTab.classList.remove("active");
+    });
+
+    announcementsTab.addEventListener("click", function () {
+        switchTab("announcements");
+        announcementsTab.classList.add("active");
+        postsTab.classList.remove("active");
+    });
+
+    // Initialize with Posts Tab active
+    switchTab("posts");
 });
